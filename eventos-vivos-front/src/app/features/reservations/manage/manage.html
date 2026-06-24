@@ -1,0 +1,75 @@
+<div class="page">
+  <a routerLink="/eventos" class="back-link">← Volver a Eventos</a>
+  <h1 class="page__title">Detalle de Reserva</h1>
+
+  @if (loading()) { <div class="loading">Cargando reserva...</div> }
+  @if (error()) { <div class="alert alert--error">{{ error() }}</div> }
+
+  @if (reservation()) {
+    <div class="card">
+      <div class="res-header">
+        <div>
+          <h2 class="res-event">{{ reservation()!.eventTitle }}</h2>
+          @if (reservation()!.reservationCode) {
+            <span class="res-code">{{ reservation()!.reservationCode }}</span>
+          }
+        </div>
+        <app-badge-status [status]="reservation()!.status" />
+      </div>
+
+      <div class="info-grid">
+        <div class="info-item">
+          <span class="info-label"><fa-icon [icon]="faUser"/> Comprador</span>
+          <span class="info-value">{{ reservation()!.buyerName }}</span>
+        </div>
+        <div class="info-item">
+          <span class="info-label"><fa-icon [icon]="faEmail"/> Correo</span>
+          <span class="info-value">{{ reservation()!.buyerEmail }}</span>
+        </div>
+        <div class="info-item">
+          <span class="info-label"><fa-icon [icon]="faTicket"/> Entradas</span>
+          <span class="info-value">{{ reservation()!.quantity }}</span>
+        </div>
+        <div class="info-item">
+          <span class="info-label"><fa-icon [icon]="faCalendar"/> Creada el</span>
+          <span class="info-value">{{ reservation()!.createdAt | date:'MMM d, y — HH:mm' }}</span>
+        </div>
+        @if (reservation()!.cancelledAt) {
+          <div class="info-item">
+            <span class="info-label">Cancelada el</span>
+            <span class="info-value">{{ reservation()!.cancelledAt | date:'MMM d, y — HH:mm' }}</span>
+          </div>
+        }
+        @if (reservation()!.ticketsLost) {
+          <div class="info-item info-item--warning">
+            <span class="info-label"><fa-icon [icon]="faWarning"/> Penalización</span>
+            <span class="info-value">Entradas perdidas (cancelación con menos de 48h del evento)</span>
+          </div>
+        }
+      </div>
+
+      <div class="actions">
+        @if (reservation()!.status === 'pendiente_pago') {
+          <button class="btn btn--success" (click)="confirmPayment()" [disabled]="actionLoading()">
+            {{ actionLoading() ? 'Procesando...' : 'Confirmar Pago' }}
+          </button>
+        }
+        @if (reservation()!.status === 'confirmada') {
+          <button class="btn btn--danger" (click)="cancelReservation()" [disabled]="actionLoading()">
+            {{ actionLoading() ? 'Procesando...' : 'Cancelar Reserva' }}
+          </button>
+        }
+        <a [routerLink]="['/eventos', reservation()!.eventId]" class="btn btn--secondary">
+          Ver Evento
+        </a>
+      </div>
+
+      @if (actionError()) {
+        <div class="alert alert--error">{{ actionError() }}</div>
+      }
+      @if (actionSuccess()) {
+        <div class="alert alert--success">{{ actionSuccess() }}</div>
+      }
+    </div>
+  }
+</div>

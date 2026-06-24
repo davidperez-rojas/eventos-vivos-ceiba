@@ -1,0 +1,77 @@
+<div class="page">
+  <a [routerLink]="['/eventos', eventId]" class="back-link">← Volver al Evento</a>
+  <h1 class="page__title">Reservar Entradas</h1>
+
+  @if (event()) {
+    <div class="event-summary">
+      <div class="event-summary__info">
+        <span class="event-summary__title">{{ event()!.title }}</span>
+        <span class="event-summary__meta">
+              <fa-icon [icon]="faCalendarr"/> {{ event()!.startDateTime | date:'MMM d, y — HH:mm' }} &nbsp;|&nbsp;
+              <fa-icon [icon]="faMap"/> {{ event()!.venue.name }} &nbsp;|&nbsp;
+              <fa-icon [icon]="faMoney"/> {{ event()!.ticketPrice | currency:'USD' }} por entrada
+            </span>
+      </div>
+      <div class="event-summary__available">
+        <span class="available-count">{{ event()!.availableTickets }}</span>
+        <span class="available-label">disponibles</span>
+      </div>
+    </div>
+  }
+
+  <div class="card">
+    <form [formGroup]="form" (ngSubmit)="onSubmit()">
+      <div class="form-grid">
+
+        <div class="field">
+          <label class="label">Nombre completo *</label>
+          <input class="input" formControlName="buyerName" placeholder="Juan Pérez" />
+          @if (isInvalid('buyerName')) {
+            <span class="field-error">El nombre es obligatorio</span>
+          }
+        </div>
+
+        <div class="field">
+          <label class="label">Correo electrónico *</label>
+          <input class="input" type="email" formControlName="buyerEmail" placeholder="juan@ejemplo.com" />
+          @if (isInvalid('buyerEmail')) {
+            <span class="field-error">Ingresa un correo válido</span>
+          }
+        </div>
+
+        <div class="field field--full">
+          <label class="label">Cantidad de entradas *</label>
+          <input class="input input--qty" type="number" formControlName="quantity" min="1" [max]="event()!.availableTickets" />
+          @if (isInvalid('quantity')) {
+            <span class="field-error">La cantidad debe ser al menos 1</span>
+          }
+          @if (event()) {
+            <span class="field-hint">
+                  Disponibles: {{ event()!.availableTickets }}
+              @if (event()!.ticketPrice > 100) { · Máximo 10 por transacción (precio > $100) }
+                </span>
+          }
+        </div>
+
+      </div>
+
+      @if (totalCost() > 0) {
+        <div class="cost-summary">
+          <span>Total a pagar:</span>
+          <strong>{{ totalCost() | currency:'USD' }}</strong>
+        </div>
+      }
+
+      @if (error()) {
+        <div class="alert alert--error">{{ error() }}</div>
+      }
+
+      <div class="form-actions">
+        <a [routerLink]="['/eventos', eventId]" class="btn btn--secondary">Cancelar</a>
+        <button type="submit" class="btn btn--primary" [disabled]="loading()">
+          {{ loading() ? 'Procesando...' : 'Confirmar Reserva' }}
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

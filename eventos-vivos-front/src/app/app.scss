@@ -1,0 +1,42 @@
+.navbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 32px;
+  height: 64px;
+  background: #1a1a2e;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+
+  &__brand { display: flex; align-items: center; gap: 10px; }
+
+  &__logo {
+    font-size: 24px;
+    color: white;
+  }
+
+  &__title { color: #fff; font-size: 20px; font-weight: 700; }
+  &__links { display: flex; gap: 16px; align-items: center; }
+
+  &__link {
+    color: #ccc;
+    text-decoration: none;
+    font-size: 14px;
+    padding: 8px 16px;
+    border-radius: 6px;
+    transition: all 0.2s;
+    &:hover{
+      color: #fff;
+      background: rgba(255,255,255,0.1);
+    }
+
+    &--primary {
+      background: #e94560;
+      color: white !important;
+      font-weight: 600;
+
+      &:hover { background: #c73652 !important; }
+    }
+  }
+}
+
+.main-content { padding: 32px; max-width: 1200px; margin: 0 auto; }

@@ -1,0 +1,84 @@
+<div class="page">
+  <div class="page__header">
+    <h1 class="page__title">Eventos</h1>
+    <a routerLink="/eventos/crear" class="btn btn--primary">+ Crear Evento</a>
+  </div>
+
+  <div class="filters">
+    <input class="input" type="text" placeholder="Buscar por título..."
+           [(ngModel)]="filters.title" (ngModelChange)="onFilterChange()" />
+    <select class="input" [(ngModel)]="filters.type" (ngModelChange)="onFilterChange()">
+      <option value="">Todos los tipos</option>
+      <option value="conferencia">Conferencia</option>
+      <option value="taller">Taller</option>
+      <option value="concierto">Concierto</option>
+    </select>
+    <select class="input" [(ngModel)]="filters.venueId" (ngModelChange)="onFilterChange()">
+      <option value="">Todos los venues</option>
+      @for (venue of venueService.venues; track venue.id) {
+        <option [value]="venue.id">{{ venue.name }}</option>
+      }
+    </select>
+    <select class="input" [(ngModel)]="filters.status" (ngModelChange)="onFilterChange()">
+      <option value="">Todos los estados</option>
+      <option value="activo">Activo</option>
+      <option value="cancelado">Cancelado</option>
+      <option value="completado">Completado</option>
+    </select>
+    <button class="btn btn--secondary" (click)="clearFilters()">Limpiar</button>
+  </div>
+
+  @if (error()) {
+    <div class="alert alert--error">{{ error() }}</div>
+  }
+
+  @if (loading()) {
+    <div class="loading">Cargando eventos...</div>
+  }
+
+  @if (!loading() && events().length > 0) {
+    <div class="table-wrapper">
+      <table class="table">
+        <thead>
+        <tr>
+          <th>Título</th>
+          <th>Tipo</th>
+          <th>Venue</th>
+          <th>Fecha de inicio</th>
+          <th>Precio</th>
+          <th>Disponibles</th>
+          <th>Estado</th>
+          <th>Acciones</th>
+        </tr>
+        </thead>
+        <tbody>
+          @for (event of events(); track event.id) {
+            <tr>
+              <td>{{ event.title }}</td>
+              <td>{{ typeLabel(event.eventType) }}</td>
+              <td>{{ event.venue.name }}</td>
+              <td>{{ event.startDateTime | date:'MMM d, y HH:mm' }}</td>
+              <td>{{ event.ticketPrice | currency:'USD' }}</td>
+              <td>
+                    <span [class]="event.availableTickets === 0 ? 'sold-out' : 'available'">
+                      {{ event.availableTickets }} / {{ event.maxCapacity }}
+                    </span>
+              </td>
+              <td><app-badge-status [status]="event.status" /></td>
+              <td>
+                <a [routerLink]="['/eventos', event.id]" class="btn btn--sm btn--outline">Ver</a>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  }
+
+  @if (!loading() && events().length === 0 && !error()) {
+    <div class="empty">
+      <p>No se encontraron eventos.</p>
+      <a routerLink="/eventos/crear" class="btn btn--primary">Crear primer evento</a>
+    </div>
+  }
+</div>

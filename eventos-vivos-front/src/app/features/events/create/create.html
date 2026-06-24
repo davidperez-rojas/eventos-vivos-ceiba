@@ -1,0 +1,100 @@
+<div class="page">
+  <div class="page__header">
+    <a routerLink="/eventos" class="back-link">← Volver a Eventos</a>
+    <h1 class="page__title">Crear Evento</h1>
+  </div>
+
+  <div class="card">
+    <form [formGroup]="form" (ngSubmit)="onSubmit()">
+      <div class="form-grid">
+
+        <div class="field field--full">
+          <label class="label">Título *</label>
+          <input class="input" formControlName="title" placeholder="Título del evento (5-100 caracteres)" />
+          @if (isInvalid('title')) {
+            <span class="field-error">El título debe tener entre 5 y 100 caracteres</span>
+          }
+        </div>
+
+        <div class="field field--full">
+          <label class="label">Descripción *</label>
+          <textarea class="input input--textarea" formControlName="description"
+                    placeholder="Descripción del evento (10-500 caracteres)" rows="3"></textarea>
+          @if (isInvalid('description')) {
+            <span class="field-error">La descripción debe tener entre 10 y 500 caracteres</span>
+          }
+        </div>
+
+        <div class="field">
+          <label class="label">Venue *</label>
+          <select class="input" formControlName="venueId">
+            <option value="">Selecciona un venue</option>
+            @for (venue of venueService.venues; track venue.id) {
+              <option [value]="venue.id">{{ venue.name }} (Cap: {{ venue.capacity }}) — {{ venue.city }}</option>
+            }
+          </select>
+          @if (isInvalid('venueId')) {
+            <span class="field-error">Selecciona un venue</span>
+          }
+        </div>
+
+        <div class="field">
+          <label class="label">Capacidad máxima *</label>
+          <input class="input" type="number" formControlName="maxCapacity" min="1" placeholder="Ej: 100" />
+          @if (isInvalid('maxCapacity')) {
+            <span class="field-error">La capacidad debe ser un número positivo</span>
+          }
+        </div>
+
+        <div class="field">
+          <label class="label">Fecha y hora de inicio *</label>
+          <input class="input" type="datetime-local" formControlName="startDateTime" />
+          @if (isInvalid('startDateTime')) {
+            <span class="field-error">La fecha de inicio es obligatoria</span>
+          }
+        </div>
+
+        <div class="field">
+          <label class="label">Fecha y hora de fin *</label>
+          <input class="input" type="datetime-local" formControlName="endDateTime" />
+          @if (isInvalid('endDateTime')) {
+            <span class="field-error">La fecha de fin es obligatoria</span>
+          }
+        </div>
+
+        <div class="field">
+          <label class="label">Precio de entrada (USD) *</label>
+          <input class="input" type="number" formControlName="ticketPrice" min="0.01" step="0.01" placeholder="Ej: 50.00" />
+          @if (isInvalid('ticketPrice')) {
+            <span class="field-error">El precio debe ser un número positivo</span>
+          }
+        </div>
+
+        <div class="field">
+          <label class="label">Tipo de evento *</label>
+          <select class="input" formControlName="eventType">
+            <option value="">Selecciona el tipo</option>
+            <option value="conferencia">Conferencia</option>
+            <option value="taller">Taller</option>
+            <option value="concierto">Concierto</option>
+          </select>
+          @if (isInvalid('eventType')) {
+            <span class="field-error">Selecciona el tipo de evento</span>
+          }
+        </div>
+
+      </div>
+
+      @if (error()) {
+        <div class="alert alert--error">{{ error() }}</div>
+      }
+
+      <div class="form-actions">
+        <a routerLink="/eventos" class="btn btn--secondary">Cancelar</a>
+        <button type="submit" class="btn btn--primary" [disabled]="loading()">
+          {{ loading() ? 'Creando...' : 'Crear Evento' }}
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

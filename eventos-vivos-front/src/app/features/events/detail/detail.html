@@ -1,0 +1,170 @@
+<div class="page">
+  <a routerLink="/eventos" class="back-link">← Volver a Eventos</a>
+
+  @if (loading()) { <div class="loading">Cargando evento...</div> }
+  @if (error()) { <div class="alert alert--error">{{ error() }}</div> }
+
+  @if (event()) {
+    <div class="detail-layout">
+      <div class="card">
+        <div class="card__header">
+          <div>
+            <h1 class="event-title">{{ event()!.title }}</h1>
+            <p class="event-desc">{{ event()!.description }}</p>
+          </div>
+          <app-badge-status [status]="event()!.status" />
+        </div>
+
+        <div class="info-grid">
+          <div class="info-item">
+            <span class="info-label"><fa-icon [icon]="faLocation" /> Venue</span>
+            <span class="info-value">{{ event()!.venue.name }} — {{ event()!.venue.city }}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label"><fa-icon [icon]="faMaskTheater" /> Tipo</span>
+            <span class="info-value">{{ typeLabel(event()!.eventType) }}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label"><fa-icon [icon]="faCalendar"/> Inicio</span>
+            <span class="info-value">{{ event()!.startDateTime | date:'MMMM d, y — HH:mm' }}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label"><fa-icon [icon]="faCalendar"/>  Fin</span>
+            <span class="info-value">{{ event()!.endDateTime | date:'MMMM d, y — HH:mm' }}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label"><fa-icon [icon]="faCoins"/> Precio</span>
+            <span class="info-value">{{ event()!.ticketPrice | currency:'USD' }}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label"><fa-icon [icon]="faTicket"/> Disponibles</span>
+            <span class="info-value" [class.sold-out]="event()!.availableTickets === 0">
+                  {{ event()!.availableTickets }} / {{ event()!.maxCapacity }}
+                </span>
+          </div>
+        </div>
+
+        @if (event()!.status === 'activo' && event()!.availableTickets > 0) {
+          <div class="card__footer">
+            <a [routerLink]="['/eventos', event()!.id, 'reservar']" class="btn btn--primary btn--lg">
+              <fa-icon [icon]="faTicketReserve"/> Reservar entradas
+            </a>
+          </div>
+        }
+        @if (event()!.availableTickets === 0) {
+          <div class="alert alert--warning">Este evento está agotado.</div>
+        }
+      </div>
+
+      @if (report()) {
+        <div class="card">
+          <h2 class="card__title"><fa-icon [icon]="faChart"/> Reporte de Ocupación</h2>
+          <div class="report-grid">
+            <div class="stat">
+              <span class="stat__value">{{ report()!.ticketsSold }}</span>
+              <span class="stat__label">Entradas vendidas</span>
+            </div>
+            <div class="stat">
+              <span class="stat__value">{{ report()!.availableTickets }}</span>
+              <span class="stat__label">Disponibles</span>
+            </div>
+            <div class="stat">
+              <span class="stat__value">{{ report()!.occupancyPercentage }}%</span>
+              <span class="stat__label">Ocupación</span>
+            </div>
+            <div class="stat">
+              <span class="stat__value">{{ report()!.totalRevenue | currency:'USD' }}</span>
+              <span class="stat__label">Ingresos totales</span>
+            </div>
+          </div>
+          <div class="progress-bar">
+            <div class="progress-bar__fill"
+                 [style.width.%]="report()!.occupancyPercentage"
+                 [class.progress-bar__fill--full]="report()!.occupancyPercentage >= 100">
+            </div>
+          </div>
+          <p class="progress-label">{{ report()!.occupancyPercentage }}% ocupado</p>
+        </div>
+      }
+
+      <div class="card">
+        <div class="reservations-header">
+          <h2 class="card__title"><fa-icon [icon]="faTicket"/> Reservas</h2>
+          <button class="btn btn--secondary btn--sm" (click)="loadReservations()">
+            <fa-icon [icon]="faUpdate"/> Actualizar
+          </button>
+        </div>
+
+        @if (loadingReservations()) {
+          <div class="loading">Cargando reservas...</div>
+        }
+
+        @if (!loadingReservations() && reservations().length === 0) {
+          <div class="empty-reservations">
+            No hay reservas para este evento aún.
+          </div>
+        }
+
+        @if (!loadingReservations() && reservations().length > 0) {
+          <div class="table-wrapper">
+            <table class="table">
+              <thead>
+              <tr>
+                <th>Código</th>
+                <th>Comprador</th>
+                <th>Email</th>
+                <th>Entradas</th>
+                <th>Estado</th>
+                <th>Fecha</th>
+                <th>Acciones</th>
+              </tr>
+              </thead>
+              <tbody>
+                @for (reservation of reservations(); track reservation.id) {
+                  <tr>
+                    <td>
+                      @if (reservation.reservationCode) {
+                        <span class="res-code">{{ reservation.reservationCode }}</span>
+                      } @else {
+                        <span class="text-muted">—</span>
+                      }
+                    </td>
+                    <td>{{ reservation.buyerName }}</td>
+                    <td class="text-muted">{{ reservation.buyerEmail }}</td>
+                    <td>
+                      {{ reservation.quantity }}
+                      @if (reservation.ticketsLost) {
+                        <span class="lost-badge" title="Entradas perdidas por penalización"><fa-icon [icon]="faWarning"/></span>
+                      }
+                    </td>
+                    <td><app-badge-status [status]="reservation.status" /></td>
+                    <td class="text-muted">{{ reservation.createdAt | date:'MMM d, y HH:mm' }}</td>
+                    <td>
+                      <a [routerLink]="['/reservas', reservation.id]"
+                         class="btn btn--sm btn--outline">
+                        Gestionar
+                      </a>
+                    </td>
+                  </tr>
+                }
+              </tbody>
+            </table>
+          </div>
+
+          <!-- Resumen rápido -->
+          <div class="reservations-summary">
+                <span class="summary-item summary-item--pending">
+                  <fa-icon [icon]="faPending"/> Pendientes: {{ countByStatus('pendiente_pago') }}
+                </span>
+            <span class="summary-item summary-item--confirmed">
+                  <fa-icon [icon]="faConfimed"/> Confirmadas: {{ countByStatus('confirmada') }}
+                </span>
+            <span class="summary-item summary-item--cancelled">
+                  <fa-icon [icon]="faCancel"/> Canceladas: {{ countByStatus('cancelada') }}
+                </span>
+          </div>
+        }
+      </div>
+    </div>
+  }
+</div>
