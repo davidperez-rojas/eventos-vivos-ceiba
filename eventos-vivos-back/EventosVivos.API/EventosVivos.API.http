@@ -1,0 +1,6 @@
+@EventosVivos.API_HostAddress = http://localhost:5217
+
+GET {{EventosVivos.API_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
