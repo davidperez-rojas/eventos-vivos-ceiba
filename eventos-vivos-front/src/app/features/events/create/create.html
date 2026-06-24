@@ -10,7 +10,7 @@
 
         <div class="field field--full">
           <label class="label">Título *</label>
-          <input class="input" formControlName="title" placeholder="Título del evento (5-100 caracteres)" maxlength="100" />
+          <input type="text" class="input" formControlName="title" placeholder="Título del evento (5-100 caracteres)" maxlength="100" />
           @if (isInvalid('title')) {
             <span class="field-error">El título debe tener entre 5 y 100 caracteres</span>
           }
@@ -19,7 +19,7 @@
         <div class="field field--full">
           <label class="label">Descripción *</label>
           <textarea class="input input--textarea" formControlName="description"
-                    placeholder="Descripción del evento (10-500 caracteres)" rows="3" maxlength="500"></textarea>
+                    placeholder="Descripción del evento (10-500 caracteres)" rows="3"></textarea>
           @if (isInvalid('description')) {
             <span class="field-error">La descripción debe tener entre 10 y 500 caracteres</span>
           }
