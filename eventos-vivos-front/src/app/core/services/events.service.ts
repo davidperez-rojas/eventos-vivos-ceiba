@@ -7,7 +7,7 @@ import { OccupancyReport } from '../models/report.model';
 @Injectable({ providedIn: 'root' })
 export class EventService {
   private readonly http = inject(HttpClient);
-  private readonly baseUrl = 'http://localhost:5217/api/events';
+  private readonly baseUrl = 'https://eventos-vivos-ceiba-production.up.railway.app/api/Events';
 
   getAll(filters?: EventFilter): Observable<Event[]> {
     let params = new HttpParams();
