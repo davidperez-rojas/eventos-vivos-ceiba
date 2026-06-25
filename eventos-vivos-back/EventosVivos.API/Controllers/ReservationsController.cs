@@ -47,8 +47,9 @@ public class ReservationsController : ControllerBase
         return Ok(reservation);
     }
 
+    // GET /api/reservations/event/{eventId}
     [HttpGet("event/{eventId:int}")]
-    public async Task<IActionResult> GetByEvent(int eventId)
+    public async Task<IActionResult> GetByEvent(int eventId, [FromQuery] string? email = null)
     {
         var reservations = await _reservationBL.GetByEventAsync(eventId);
         return Ok(reservations);

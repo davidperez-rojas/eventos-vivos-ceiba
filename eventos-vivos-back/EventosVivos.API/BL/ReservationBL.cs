@@ -151,9 +151,15 @@ public class ReservationBL : IReservationBL
         };
     }
 
-    public async Task<IEnumerable<ReservationResponse>> GetByEventAsync(int eventId)
+    public async Task<IEnumerable<ReservationResponse>> GetByEventAsync(int eventId, string? email = null)
     {
-        var reservations = await _reservationDAO.GetByEventAsync(eventId);
+        IEnumerable<Reservation> reservations;
+
+        if (!string.IsNullOrWhiteSpace(email))
+            reservations = await _reservationDAO.GetByEventAndEmailAsync(eventId, email);
+        else
+            reservations = await _reservationDAO.GetByEventAsync(eventId);
+
         return reservations.Select(MapToResponse);
     }
 }

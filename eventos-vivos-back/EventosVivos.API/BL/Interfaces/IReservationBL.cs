@@ -9,5 +9,5 @@ public interface IReservationBL
     Task<ReservationResponse> GetByIdAsync(int id);
     Task<ReservationResponse> ConfirmPaymentAsync(int reservationId);
     Task<ReservationResponse> CancelAsync(int reservationId);
-    Task<IEnumerable<ReservationResponse>> GetByEventAsync(int eventId);
+    Task<IEnumerable<ReservationResponse>> GetByEventAsync(int eventId, string? email = null);
 }

@@ -64,4 +64,12 @@ public class ReservationDAO : IReservationDAO
         return await _context.Reservations
             .AnyAsync(r => r.ReservationCode == code);
     }
+
+    public async Task<IEnumerable<Reservation>> GetByEventAndEmailAsync(int eventId,  string email)
+    {
+        return await _context.Reservations
+        .Where(r => r.EventId == eventId
+            && r.BuyerEmail == email.Trim().ToLower())
+        .ToListAsync();
+    }
 }
