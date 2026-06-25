@@ -6,7 +6,8 @@ import { Reservation, CreateReservationRequest } from '../models/reservation.mod
 @Injectable({ providedIn: 'root' })
 export class ReservationService {
   private readonly http = inject(HttpClient);
-  private readonly baseUrl = 'https://eventos-vivos-ceiba-production.up.railway.app/api/Reservations';
+  //private readonly baseUrl = 'https://eventos-vivos-ceiba-production.up.railway.app/api/Reservations';
+  private readonly baseUrl = 'http://localhost:5217/api/Reservations';
 
   create(request: CreateReservationRequest): Observable<Reservation> {
     return this.http.post<Reservation>(this.baseUrl, request);

@@ -6,6 +6,8 @@ export const authGuard: CanActivateFn = () => {
   const roleService = inject(RoleService);
   const router = inject(Router);
 
+  roleService.loadFromSession();
+
   if (!roleService.hasRole()) {
     router.navigate(['/']);
     return false;
