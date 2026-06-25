@@ -51,7 +51,7 @@ public class ReservationsController : ControllerBase
     [HttpGet("event/{eventId:int}")]
     public async Task<IActionResult> GetByEvent(int eventId, [FromQuery] string? email = null)
     {
-        var reservations = await _reservationBL.GetByEventAsync(eventId);
+        var reservations = await _reservationBL.GetByEventAsync(eventId, email);
         return Ok(reservations);
     }
 }
