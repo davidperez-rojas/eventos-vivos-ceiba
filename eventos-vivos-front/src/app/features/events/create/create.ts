@@ -60,13 +60,12 @@ export class Create {
       return;
 
     this.eventService.create(request).subscribe({
-      next: (event) => this.router.navigate(['/events', event.id]),
+      next: (event) => this.router.navigate(['/eventos', event.id]),
       error: (err) => { this.error.set(err.message); this.loading.set(false); }
     });
   }
 
   private validateRequest(request: CreateEventRequest): boolean {
-    debugger;
     const now = new Date();
     const startDate = new Date(request.startDateTime);
     const endDate = new Date(request.endDateTime);

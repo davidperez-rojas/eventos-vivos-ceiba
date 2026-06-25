@@ -18,7 +18,7 @@ export const adminGuard: CanActivateFn = () => {
   const router = inject(Router);
 
   if (!roleService.isAdmin()) {
-    router.navigate(['/events']);
+    router.navigate(['/eventos']);
     return false;
   }
   return true;
