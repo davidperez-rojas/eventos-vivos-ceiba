@@ -1,0 +1,61 @@
+.role-page {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #f4f6fb;
+}
+
+.role-card {
+  background: #fff;
+  border-radius: 16px;
+  padding: 48px 40px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
+  text-align: center;
+  width: 100%;
+  max-width: 440px;
+
+  &__logo { font-size: 48px; margin-bottom: 12px; }
+  &__title { font-size: 28px; font-weight: 700; color: #1a1a2e; margin: 0 0 8px; }
+  &__subtitle { font-size: 15px; color: #888; margin: 0 0 36px; }
+}
+
+.role-options {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.role-option {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  padding: 24px;
+  border-radius: 12px;
+  border: 2px solid transparent;
+  cursor: pointer;
+  transition: all 0.2s;
+  background: #f8f9ff;
+
+  i { font-size: 28px; margin-bottom: 4px; }
+
+  &__label { font-size: 16px; font-weight: 700; color: #1a1a2e; }
+  &__desc { font-size: 13px; color: #888; }
+
+  &--user {
+    &:hover {
+      border-color: #e94560;
+      background: #fff5f7;
+      i { color: #e94560; }
+    }
+  }
+
+  &--admin {
+    &:hover {
+      border-color: #1a1a2e;
+      background: #f0f0f5;
+      i { color: #1a1a2e; }
+    }
+  }
+}

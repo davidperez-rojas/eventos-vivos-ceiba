@@ -9,7 +9,7 @@ describe('EventService', () => {
   let service: EventService;
   let httpMock: HttpTestingController;
 
-  const baseUrl = 'http://localhost:5217/api/events';
+  const baseUrl = 'https://eventos-vivos-ceiba-production.up.railway.app/api/Events';
 
   const mockEvent: Event = {
     id: 1,

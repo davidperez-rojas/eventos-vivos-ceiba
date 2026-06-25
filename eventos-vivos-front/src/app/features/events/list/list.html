@@ -6,10 +6,12 @@
       <h1 class="page__title">Eventos</h1>
       <span class="page__count">{{ events().length }} evento(s) encontrado(s)</span>
     </div>
-    <a routerLink="/eventos/crear" class="btn btn--primary">
-      <i class="fa-solid fa-plus"></i>
-      Crear Evento
-    </a>
+    @if(roleService.isAdmin()){
+      <a routerLink="/eventos/crear" class="btn btn--primary">
+        <i class="fa-solid fa-plus"></i>
+        Crear Evento
+      </a>
+    }
   </div>
 
   <!-- Filters -->
@@ -29,6 +31,32 @@
           type="text"
           placeholder="Buscar por título..."
           [(ngModel)]="filters.title"
+          (ngModelChange)="onFilterChange()"
+        />
+      </div>
+
+      <div class="field">
+        <label class="label">
+          <i class="fa-solid fa-calendar"></i>
+          Desde
+        </label>
+        <input
+          class="input"
+          type="date"
+          [(ngModel)]="filters.dateFrom"
+          (ngModelChange)="onFilterChange()"
+        />
+      </div>
+
+      <div class="field">
+        <label class="label">
+          <i class="fa-solid fa-calendar-check"></i>
+          Hasta
+        </label>
+        <input
+          class="input"
+          type="date"
+          [(ngModel)]="filters.dateTo"
           (ngModelChange)="onFilterChange()"
         />
       </div>
@@ -161,11 +189,13 @@
     <div class="empty">
       <i class="fa-solid fa-calendar-xmark empty__icon"></i>
       <p class="empty__title">No se encontraron eventos</p>
-      <p class="empty__subtitle">Crea el primer evento para comenzar</p>
-      <a routerLink="/eventos/crear" class="btn btn--primary">
-        <i class="fa-solid fa-plus"></i>
-        Crear evento
-      </a>
+      @if(roleService.isAdmin()){
+        <p class="empty__subtitle">Crea el primer evento para comenzar</p>
+        <a routerLink="/eventos/crear" class="btn btn--primary">
+          <i class="fa-solid fa-plus"></i>
+          Crear evento
+        </a>
+      }
     </div>
   }
 

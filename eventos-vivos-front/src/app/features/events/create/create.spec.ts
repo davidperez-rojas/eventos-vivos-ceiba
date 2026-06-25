@@ -25,6 +25,10 @@ describe('Create', () => {
     return date;
   };
 
+  const pad = (n: number) => n.toString().padStart(2, '0');
+  const toLocal = (d: Date) =>
+    `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`;
+
   const getValidFormValue = () => {
     const start = getFutureMonday();
     const end = new Date(start);
@@ -34,8 +38,8 @@ describe('Create', () => {
       description: 'Una conferencia increíble sobre el futuro del software',
       venueId: '1',
       maxCapacity: 100,
-      startDateTime: start.toISOString().slice(0, 16),
-      endDateTime: end.toISOString().slice(0, 16),
+      startDateTime: toLocal(start),
+      endDateTime: toLocal(end),
       ticketPrice: 50,
       eventType: 'conferencia'
     };
@@ -50,7 +54,9 @@ describe('Create', () => {
       imports: [Create],
       providers: [
         provideZonelessChangeDetection(),
-        provideRouter([]),
+        provideRouter([
+          { path: 'events/:id', component: Create } // agregar esta ruta
+        ]),
         provideHttpClient(),
         provideHttpClientTesting(),
         { provide: EventService, useValue: eventServiceMock },
@@ -111,13 +117,36 @@ describe('Create', () => {
 
     component.form.setValue({
       ...getValidFormValue(),
-      startDateTime: saturday.toISOString().slice(0, 16),
-      endDateTime: end.toISOString().slice(0, 16)
+      startDateTime: toLocal(saturday),
+      endDateTime: toLocal(end)
     });
 
     component.onSubmit();
 
     expect(eventServiceMock.create).toHaveBeenCalled();
+  });
+
+  it('should allow weekend event that starts after 22:00 (RN-03)', () => {
+    // Buscar próximo sábado a las 22:00 — No debe pasar
+    const saturday = new Date();
+    saturday.setDate(saturday.getDate() + 1);
+    while (saturday.getDay() !== 6) saturday.setDate(saturday.getDate() + 1);
+    saturday.setHours(22, 0, 0, 0);
+
+    const end = new Date(saturday);
+    end.setHours(22, 30, 0, 0);
+
+    component.form.setValue({
+      ...getValidFormValue(),
+      startDateTime: toLocal(saturday),
+      endDateTime: toLocal(end)
+    });
+
+    component.onSubmit();
+    fixture.detectChanges();
+
+    expect(component.error()).toContain('fin de semana')
+    expect(eventServiceMock.create).not.toHaveBeenCalled();
   });
 
   it('should show error if maxCapacity exceeds venue capacity (RN-01)', () => {

@@ -6,6 +6,7 @@ import {FormsModule} from '@angular/forms';
 import {EventService} from '../../../core/services/events.service';
 import {VenueService} from '../../../core/services/venue.service';
 import {Event, EventFilter} from '../../../core/models/event.model';
+import {RoleService} from '../../../core/services/role.service';
 
 @Component({
   selector: 'app-list',
@@ -22,6 +23,7 @@ import {Event, EventFilter} from '../../../core/models/event.model';
 export class List {
   private readonly eventService = inject(EventService);
   readonly venueService = inject(VenueService);
+  readonly roleService = inject(RoleService);
 
   events = signal<Event[]>([]);
   loading = signal(false);

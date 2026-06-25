@@ -56,7 +56,7 @@
         }
       </div>
 
-      @if (report()) {
+      @if (report() && roleService.isAdmin()) {
         <div class="card">
           <h2 class="card__title"><fa-icon [icon]="faChart"/> Reporte de Ocupación</h2>
           <div class="report-grid">
@@ -89,10 +89,35 @@
 
       <div class="card">
         <div class="reservations-header">
-          <h2 class="card__title"><fa-icon [icon]="faTicket"/> Reservas</h2>
-          <button class="btn btn--secondary btn--sm" (click)="loadReservations()">
-            <fa-icon [icon]="faUpdate"/> Actualizar
-          </button>
+          <h2 class="card__title">
+            <fa-icon [icon]="faTicket"/>
+            Reservas
+          </h2>
+
+          @if (roleService.isAdmin()) {
+            <button class="btn btn--secondary btn--sm" (click)="loadReservations()">
+              <fa-icon [icon]="faUpdate"/>
+              Actualizar
+            </button>
+          }
+
+          @if (roleService.isUser()) {
+            <div class="reservation-search">
+              <div class="reservation-search__input-wrapper">
+                <i class="fa-solid fa-magnifying-glass reservation-search__icon"></i>
+                <input
+                  type="email"
+                  name="searchByEmail"
+                  class="input reservation-search__input"
+                  placeholder="Buscar mis reservas por correo..."
+                  [(ngModel)]="searchByEmail"
+                />
+              </div>
+              <button class="btn btn--primary" (click)="loadReservationsByEmail()">
+                Buscar
+              </button>
+            </div>
+          }
         </div>
 
         @if (loadingReservations()) {

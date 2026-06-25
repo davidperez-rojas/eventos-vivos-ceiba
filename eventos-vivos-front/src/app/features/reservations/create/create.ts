@@ -24,6 +24,7 @@ export class Create {
   faCalendarr = faCalendar;
   faMap = faMapPin;
   faMoney = faMoneyBill;
+  private readonly emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 
   private readonly fb = inject(FormBuilder);
   private readonly reservationService = inject(ReservationService);
@@ -38,7 +39,7 @@ export class Create {
 
   form = this.fb.group({
     buyerName: ['', Validators.required],
-    buyerEmail: ['', [Validators.required, Validators.email]],
+    buyerEmail: ['', [Validators.required, Validators.email, Validators.pattern(this.emailRegex)]],
     quantity: [1, [Validators.required, Validators.min(1)]]
   });
 

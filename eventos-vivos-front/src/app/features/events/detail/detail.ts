@@ -16,6 +16,8 @@ import {
 import {FaIconComponent} from '@fortawesome/angular-fontawesome';
 import {ReservationService} from '../../../core/services/reservation.service';
 import {Reservation} from '../../../core/models/reservation.model';
+import {RoleService} from '../../../core/services/role.service';
+import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 
 @Component({
   selector: 'app-detail',
@@ -24,7 +26,9 @@ import {Reservation} from '../../../core/models/reservation.model';
     RouterLink,
     DatePipe,
     BadgeStatus,
-    FaIconComponent
+    FaIconComponent,
+    ReactiveFormsModule,
+    FormsModule
   ],
   templateUrl: './detail.html',
   styleUrl: './detail.scss',
@@ -43,9 +47,12 @@ export class Detail {
   faCancel = faX;
   faWarning = faTriangleExclamation;
 
+  searchByEmail: string = '';
+
   private readonly route = inject(ActivatedRoute);
   private readonly eventService = inject(EventService);
   private readonly reservationService = inject(ReservationService);
+  readonly roleService = inject(RoleService);
 
   event = signal<Event | null>(null);
   report = signal<OccupancyReport | null>(null);
@@ -60,7 +67,8 @@ export class Detail {
     this.eventId = Number(this.route.snapshot.paramMap.get('id'));
     this.loadEvent();
     this.loadReport();
-    this.loadReservations();
+    if(this.roleService.isAdmin())
+        this.loadReservations();
   }
 
   loadEvent(): void {
@@ -81,6 +89,14 @@ export class Detail {
   loadReservations(): void {
     this.loadingReservations.set(true);
     this.reservationService.getByEvent(this.eventId).subscribe({
+      next: (data) => { this.reservations.set(data); this.loadingReservations.set(false); },
+      error: () => this.loadingReservations.set(false)
+    });
+  }
+
+  loadReservationsByEmail(): void {
+    this.loadingReservations.set(true);
+    this.reservationService.getByEvent(this.eventId, this.searchByEmail).subscribe({
       next: (data) => { this.reservations.set(data); this.loadingReservations.set(false); },
       error: () => this.loadingReservations.set(false)
     });

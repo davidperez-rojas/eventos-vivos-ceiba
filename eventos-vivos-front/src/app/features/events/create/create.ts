@@ -66,6 +66,7 @@ export class Create {
   }
 
   private validateRequest(request: CreateEventRequest): boolean {
+    debugger;
     const now = new Date();
     const startDate = new Date(request.startDateTime);
     const endDate = new Date(request.endDateTime);

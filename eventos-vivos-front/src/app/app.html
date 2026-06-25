@@ -3,12 +3,17 @@
     <span class="navbar__logo"><fa-icon [icon]="faCalendar"/></span>
     <span class="navbar__title">EventosVivos</span>
   </div>
-  <div class="navbar__links">
-    <a routerLink="/eventos" class="navbar__link">Eventos</a>
-    <a routerLink="/eventos/crear" class="navbar__link navbar__link--primary">
-      + Crear Evento
-    </a>
-  </div>
+  @if(roleService.hasRole()){
+    <div class="navbar__links">
+      <a routerLink="/eventos" class="navbar__link">Eventos</a>
+      @if(roleService.isAdmin()){
+        <a routerLink="/eventos/crear" class="navbar__link navbar__link--primary">
+          + Crear Evento
+        </a>
+      }
+        <a (click)="logout()" class="navbar__link">Logout</a>
+    </div>
+  }
 </nav>
 <main class="main-content">
   <router-outlet />

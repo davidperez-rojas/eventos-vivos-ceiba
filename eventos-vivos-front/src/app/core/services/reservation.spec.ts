@@ -9,7 +9,7 @@ describe('ReservationService', () => {
   let service: ReservationService;
   let httpMock: HttpTestingController;
 
-  const baseUrl = 'http://localhost:5217/api/reservations';
+  const baseUrl = 'https://eventos-vivos-ceiba-production.up.railway.app/api/Reservations';
 
   const mockReservation: Reservation = {
     id: 1, eventId: 1, eventTitle: 'Tech Conference',
@@ -19,6 +19,7 @@ describe('ReservationService', () => {
   };
 
   beforeEach(() => {
+    TestBed.resetTestingModule();
     TestBed.configureTestingModule({
       providers: [ReservationService, provideHttpClient(), provideHttpClientTesting()]
     });
@@ -26,7 +27,10 @@ describe('ReservationService', () => {
     httpMock = TestBed.inject(HttpTestingController);
   });
 
-  afterEach(() => httpMock.verify());
+  afterEach(() => {
+    httpMock.verify();
+    TestBed.resetTestingModule();
+  });
 
   it('should be created', () => {
     expect(service).toBeTruthy();

@@ -1,0 +1,20 @@
+<div class="role-page">
+  <div class="role-card">
+    <h1 class="role-card__title">EventosVivos</h1>
+    <p class="role-card__subtitle">Selecciona cómo deseas ingresar</p>
+
+    <div class="role-options">
+      <button class="role-option role-option--user" (click)="select('user')">
+        <i class="fa-solid fa-user"></i>
+        <span class="role-option__label">Usuario</span>
+        <span class="role-option__desc">Ver eventos y hacer reservas</span>
+      </button>
+
+      <button class="role-option role-option--admin" (click)="select('admin')">
+        <i class="fa-solid fa-shield-halved"></i>
+        <span class="role-option__label">Administrador</span>
+        <span class="role-option__desc">Gestionar eventos y reservas</span>
+      </button>
+    </div>
+  </div>
+</div>
