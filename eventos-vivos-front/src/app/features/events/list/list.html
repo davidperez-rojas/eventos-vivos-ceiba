@@ -1,41 +1,104 @@
 <div class="page">
+
+  <!-- Header -->
   <div class="page__header">
-    <h1 class="page__title">Eventos</h1>
-    <a routerLink="/eventos/crear" class="btn btn--primary">+ Crear Evento</a>
+    <div class="page__header-left">
+      <h1 class="page__title">Eventos</h1>
+      <span class="page__count">{{ events().length }} evento(s) encontrado(s)</span>
+    </div>
+    <a routerLink="/eventos/crear" class="btn btn--primary">
+      <i class="fa-solid fa-plus"></i>
+      Crear Evento
+    </a>
   </div>
 
-  <div class="filters">
-    <input class="input" type="text" placeholder="Buscar por título..."
-           [(ngModel)]="filters.title" (ngModelChange)="onFilterChange()" />
-    <select class="input" [(ngModel)]="filters.type" (ngModelChange)="onFilterChange()">
-      <option value="">Todos los tipos</option>
-      <option value="conferencia">Conferencia</option>
-      <option value="taller">Taller</option>
-      <option value="concierto">Concierto</option>
-    </select>
-    <select class="input" [(ngModel)]="filters.venueId" (ngModelChange)="onFilterChange()">
-      <option value="">Todos los venues</option>
-      @for (venue of venueService.venues; track venue.id) {
-        <option [value]="venue.id">{{ venue.name }}</option>
-      }
-    </select>
-    <select class="input" [(ngModel)]="filters.status" (ngModelChange)="onFilterChange()">
-      <option value="">Todos los estados</option>
-      <option value="activo">Activo</option>
-      <option value="cancelado">Cancelado</option>
-      <option value="completado">Completado</option>
-    </select>
-    <button class="btn btn--secondary" (click)="clearFilters()">Limpiar</button>
+  <!-- Filters -->
+  <div class="filters-card">
+    <div class="filters-card__header">
+      <i class="fa-solid fa-filter"></i>
+      <span>Filtros</span>
+    </div>
+    <div class="filters-grid">
+      <div class="field">
+        <label class="label">
+          <i class="fa-solid fa-magnifying-glass"></i>
+          Buscar
+        </label>
+        <input
+          class="input"
+          type="text"
+          placeholder="Buscar por título..."
+          [(ngModel)]="filters.title"
+          (ngModelChange)="onFilterChange()"
+        />
+      </div>
+
+      <div class="field">
+        <label class="label">
+          <i class="fa-solid fa-tag"></i>
+          Tipo
+        </label>
+        <select class="input" [(ngModel)]="filters.type" (ngModelChange)="onFilterChange()">
+          <option value="">Todos los tipos</option>
+          <option value="conferencia">Conferencia</option>
+          <option value="taller">Taller</option>
+          <option value="concierto">Concierto</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label class="label">
+          <i class="fa-solid fa-location-dot"></i>
+          Venue
+        </label>
+        <select class="input" [(ngModel)]="filters.venueId" (ngModelChange)="onFilterChange()">
+          <option value="">Todos los venues</option>
+          @for (venue of venueService.venues; track venue.id) {
+            <option [value]="venue.id">{{ venue.name }}</option>
+          }
+        </select>
+      </div>
+
+      <div class="field">
+        <label class="label">
+          <i class="fa-solid fa-circle-half-stroke"></i>
+          Estado
+        </label>
+        <select class="input" [(ngModel)]="filters.status" (ngModelChange)="onFilterChange()">
+          <option value="">Todos los estados</option>
+          <option value="activo">Activo</option>
+          <option value="cancelado">Cancelado</option>
+          <option value="completado">Completado</option>
+        </select>
+      </div>
+
+      <div class="field field--action">
+        <label class="label label--hidden">Acción</label>
+        <button class="btn btn--secondary btn--full" (click)="clearFilters()">
+          <i class="fa-solid fa-xmark"></i>
+          Limpiar filtros
+        </button>
+      </div>
+    </div>
   </div>
 
+  <!-- Error -->
   @if (error()) {
-    <div class="alert alert--error">{{ error() }}</div>
+    <div class="alert alert--error">
+      <i class="fa-solid fa-circle-exclamation"></i>
+      {{ error() }}
+    </div>
   }
 
+  <!-- Loading -->
   @if (loading()) {
-    <div class="loading">Cargando eventos...</div>
+    <div class="loading">
+      <i class="fa-solid fa-spinner fa-spin"></i>
+      Cargando eventos...
+    </div>
   }
 
+  <!-- Table -->
   @if (!loading() && events().length > 0) {
     <div class="table-wrapper">
       <table class="table">
@@ -54,19 +117,37 @@
         <tbody>
           @for (event of events(); track event.id) {
             <tr>
-              <td>{{ event.title }}</td>
-              <td>{{ typeLabel(event.eventType) }}</td>
-              <td>{{ event.venue.name }}</td>
-              <td>{{ event.startDateTime | date:'MMM d, y HH:mm' }}</td>
-              <td>{{ event.ticketPrice | currency:'USD' }}</td>
+              <td class="td--title">{{ event.title }}</td>
               <td>
-                    <span [class]="event.availableTickets === 0 ? 'sold-out' : 'available'">
-                      {{ event.availableTickets }} / {{ event.maxCapacity }}
-                    </span>
+                <span class="type-badge type-badge--{{ event.eventType }}">
+                  <i [class]="typeIcon(event.eventType)"></i>
+                  {{ typeLabel(event.eventType) }}
+                </span>
+              </td>
+              <td>
+                <span class="venue-name">
+                  <i class="fa-solid fa-location-dot"></i>
+                  {{ event.venue.name }}
+                </span>
+              </td>
+              <td class="td--date">
+                <span class="date-main">{{ event.startDateTime | date:'MMM d, y' }}</span>
+                <span class="date-time">{{ event.startDateTime | date:'HH:mm' }}</span>
+              </td>
+              <td class="td--price">{{ event.ticketPrice | currency:'USD' }}</td>
+              <td>
+                <div class="availability">
+                  <span [class]="event.availableTickets === 0 ? 'sold-out' : 'available'">
+                    <i [class]="event.availableTickets === 0 ? 'fa-solid fa-ban' : 'fa-solid fa-ticket'"></i>
+                    {{ event.availableTickets }} / {{ event.maxCapacity }}
+                  </span>
+                </div>
               </td>
               <td><app-badge-status [status]="event.status" /></td>
               <td>
-                <a [routerLink]="['/eventos', event.id]" class="btn btn--sm btn--outline">Ver</a>
+                <a [routerLink]="['/eventos', event.id]" class="btn btn--sm btn--outline">
+                  Ver
+                </a>
               </td>
             </tr>
           }
@@ -75,10 +156,17 @@
     </div>
   }
 
+  <!-- Empty -->
   @if (!loading() && events().length === 0 && !error()) {
     <div class="empty">
-      <p>No se encontraron eventos.</p>
-      <a routerLink="/eventos/crear" class="btn btn--primary">Crear primer evento</a>
+      <i class="fa-solid fa-calendar-xmark empty__icon"></i>
+      <p class="empty__title">No se encontraron eventos</p>
+      <p class="empty__subtitle">Crea el primer evento para comenzar</p>
+      <a routerLink="/eventos/crear" class="btn btn--primary">
+        <i class="fa-solid fa-plus"></i>
+        Crear evento
+      </a>
     </div>
   }
+
 </div>

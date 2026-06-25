@@ -41,7 +41,7 @@
 
         <div class="field field--full">
           <label class="label">Cantidad de entradas *</label>
-          <input class="input input--qty" type="number" formControlName="quantity" min="1" [max]="event()!.availableTickets" />
+          <input class="input input--qty" type="number" formControlName="quantity" min="1" />
           @if (isInvalid('quantity')) {
             <span class="field-error">La cantidad debe ser al menos 1</span>
           }

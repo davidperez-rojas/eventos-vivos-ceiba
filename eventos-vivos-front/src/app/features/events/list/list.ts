@@ -51,4 +51,13 @@ export class List {
     };
     return labels[type] ?? type;
   }
+
+  typeIcon(type: string): string {
+    const icons: Record<string, string> = {
+      conferencia: 'fa-solid fa-microphone',
+      taller: 'fa-solid fa-screwdriver-wrench',
+      concierto: 'fa-solid fa-music'
+    };
+    return icons[type] ?? 'fa-solid fa-calendar';
+  }
 }
