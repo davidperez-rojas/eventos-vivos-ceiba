@@ -73,14 +73,6 @@ public class ReservationBL : IReservationBL
         };
 
         var created = await _reservationDAO.CreateAsync(reservation);
-
-        int remaining = available - request.Quantity;
-        if (remaining == 0)
-        {
-            evt.Status = EventStatus.Completed;
-            await _eventDAO.UpdateAsync(evt);
-        }
-
         var result = await _reservationDAO.GetByIdAsync(created.Id);
 
         return MapToResponse(result!);
