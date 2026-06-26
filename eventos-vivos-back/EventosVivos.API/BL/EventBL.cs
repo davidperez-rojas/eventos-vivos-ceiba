@@ -159,7 +159,7 @@ public class EventBL : IEventBL
         };
     }
 
-    public async Task<Event> CancelEventAsync(int eventId)
+    public async Task<EventResponse> CancelEventAsync(int eventId)
     {
         await UpdateStatusesAsync();
         var evt = await _eventDAO.GetByIdAsync(eventId);
@@ -170,6 +170,6 @@ public class EventBL : IEventBL
         evt.Status = EventStatus.Cancelled;
         await _eventDAO.UpdateAsync(evt);
 
-        return evt;
+        return MapToResponse(evt);
     }
 }
