@@ -8,8 +8,8 @@ import {Reservation} from '../models/reservation.model';
 @Injectable({ providedIn: 'root' })
 export class EventService {
   private readonly http = inject(HttpClient);
-  //private readonly baseUrl = 'https://eventos-vivos-ceiba-production.up.railway.app/api/Events';
-  private readonly baseUrl = 'http://localhost:5217/api/Events';
+  private readonly baseUrl = 'https://eventos-vivos-ceiba-production.up.railway.app/api/Events';
+  //private readonly baseUrl = 'http://localhost:5217/api/Events';
 
   getAll(filters?: EventFilter): Observable<Event[]> {
     let params = new HttpParams();
