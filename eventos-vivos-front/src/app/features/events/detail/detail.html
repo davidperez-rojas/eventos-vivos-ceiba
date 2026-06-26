@@ -44,15 +44,26 @@
           </div>
         </div>
 
-        @if (event()!.status === 'activo' && event()!.availableTickets > 0) {
+        @if (event()!.status === 'activo') {
           <div class="card__footer">
-            <a [routerLink]="['/eventos', event()!.id, 'reservar']" class="btn btn--primary btn--lg">
-              <fa-icon [icon]="faTicketReserve"/> Reservar entradas
-            </a>
+            @if (event()!.status === 'activo' && roleService.isAdmin()) {
+              <a class="btn btn--secondary btn--lg" (click)="cancelEvent()">
+                Cancelar evento
+              </a>
+            }
+            @if(event()!.availableTickets > 0){
+              <a [routerLink]="['/eventos', event()!.id, 'reservar']" class="btn btn--primary btn--lg">
+                <fa-icon [icon]="faTicketReserve"/> Reservar entradas
+              </a>
+            }
           </div>
         }
         @if (event()!.availableTickets === 0) {
           <div class="alert alert--warning">Este evento está agotado.</div>
+        }
+
+        @if (event()!.status === 'cancelado') {
+          <div class="alert alert--warning">Este evento está cancelado.</div>
         }
       </div>
 

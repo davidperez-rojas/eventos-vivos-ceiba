@@ -158,4 +158,18 @@ public class EventBL : IEventBL
             Status = evt.Status
         };
     }
+
+    public async Task<Event> CancelEventAsync(int eventId)
+    {
+        await UpdateStatusesAsync();
+        var evt = await _eventDAO.GetByIdAsync(eventId);
+
+        if (evt == null)
+            throw new KeyNotFoundException($"No se ha encontrado el evento {eventId} para cancelar.");
+
+        evt.Status = EventStatus.Cancelled;
+        await _eventDAO.UpdateAsync(evt);
+
+        return evt;
+    }
 }

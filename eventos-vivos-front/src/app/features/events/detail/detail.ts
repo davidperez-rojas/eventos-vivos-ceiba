@@ -106,6 +106,15 @@ export class Detail {
     return this.reservations().filter(r => r.status === status).length;
   }
 
+  cancelEvent(): void {
+    this.loadingReservations.set(true);
+    this.eventService.cancelEvent(this.eventId).subscribe({
+      next: (data) => {this.event.set(data)},
+      error: () => {},
+      complete: () => this.loadingReservations.set(false)
+    })
+  }
+
   typeLabel(type: string): string {
     const labels: Record<string, string> = {
       conferencia: 'Conferencia', taller: 'Taller', concierto: 'Concierto'

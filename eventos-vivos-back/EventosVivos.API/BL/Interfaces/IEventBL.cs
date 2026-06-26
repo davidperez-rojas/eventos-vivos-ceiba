@@ -10,4 +10,5 @@ public interface IEventBL
     Task<EventResponse> CreateAsync(CreateEventRequest request);
     Task UpdateStatusesAsync();
     Task<OccupancyReportResponse> GetReportAsync(int eventId);
+    Task<EventResponse> CancelEventAsync(int eventId);
 }

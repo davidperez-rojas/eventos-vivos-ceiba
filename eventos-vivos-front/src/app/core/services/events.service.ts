@@ -3,12 +3,13 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Event, CreateEventRequest, EventFilter } from '../models/event.model';
 import { OccupancyReport } from '../models/report.model';
+import {Reservation} from '../models/reservation.model';
 
 @Injectable({ providedIn: 'root' })
 export class EventService {
   private readonly http = inject(HttpClient);
-  private readonly baseUrl = 'https://eventos-vivos-ceiba-production.up.railway.app/api/Events';
-  //private readonly baseUrl = 'http://localhost:5217/api/Events';
+  //private readonly baseUrl = 'https://eventos-vivos-ceiba-production.up.railway.app/api/Events';
+  private readonly baseUrl = 'http://localhost:5217/api/Events';
 
   getAll(filters?: EventFilter): Observable<Event[]> {
     let params = new HttpParams();
@@ -31,5 +32,9 @@ export class EventService {
 
   getReport(id: number): Observable<OccupancyReport> {
     return this.http.get<OccupancyReport>(`${this.baseUrl}/${id}/report`);
+  }
+
+  cancelEvent(eventId: number): Observable<Event>{
+    return this.http.put<Event>(`${this.baseUrl}/${eventId}`, {});
   }
 }

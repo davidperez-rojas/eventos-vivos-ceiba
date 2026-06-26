@@ -61,4 +61,12 @@ public class EventsController : ControllerBase
         var report = await _eventBL.GetReportAsync(id);
         return Ok(report);
     }
+
+    // PUT /api/events/{eventId}
+    [HttpPut("{eventId:int}")]
+    public async Task<IActionResult> CancelEventAsync(int eventId)
+    {
+        var cancel = await _eventBL.CancelEventAsync(eventId);
+        return Ok(cancel);
+    }
 }
