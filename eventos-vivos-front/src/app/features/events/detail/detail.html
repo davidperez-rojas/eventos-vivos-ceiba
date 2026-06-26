@@ -115,7 +115,7 @@
           @if (roleService.isUser()) {
             <div class="reservation-search">
               <div class="reservation-search__input-wrapper">
-                <i class="fa-solid fa-magnifying-glass reservation-search__icon"></i>
+                <fa-icon class="reservation-search__icon" [icon]="faSearchReservation"/>
                 <input
                   type="email"
                   name="searchByEmail"
@@ -123,6 +123,9 @@
                   placeholder="Buscar mis reservas por correo..."
                   [(ngModel)]="searchByEmail"
                 />
+                @if(errorSearchByEmail()){
+                  <span style="color: red">Por favor ingresa un correo.</span>
+                }
               </div>
               <button class="btn btn--primary" (click)="loadReservationsByEmail()">
                 Buscar

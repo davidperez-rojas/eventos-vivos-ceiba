@@ -8,7 +8,7 @@ import {OccupancyReport} from '../../../core/models/report.model';
 import {
   faArrowsRotate,
   faCalendarCheck, faChartColumn, faCheck, faHourglass,
-  faLocationDot,
+  faLocationDot, faMagnifyingGlass,
   faMasksTheater,
   faMoneyBill, faTicketAlt,
   faTicketSimple, faTriangleExclamation, faX
@@ -46,8 +46,10 @@ export class Detail {
   faConfimed = faCheck;
   faCancel = faX;
   faWarning = faTriangleExclamation;
+  faSearchReservation = faMagnifyingGlass
 
   searchByEmail: string = '';
+  errorSearchByEmail = signal<boolean>(false);
 
   private readonly route = inject(ActivatedRoute);
   private readonly eventService = inject(EventService);
@@ -95,8 +97,18 @@ export class Detail {
   }
 
   loadReservationsByEmail(): void {
+    console.log(this.searchByEmail);
+    if(!this.searchByEmail || this.searchByEmail.trim() === ''){
+      this.errorSearchByEmail.set(true);
+      setTimeout(() => {
+        this.errorSearchByEmail.set(false);
+      }, 3000)
+
+      return;
+    }
+
     this.loadingReservations.set(true);
-    this.reservationService.getByEvent(this.eventId, this.searchByEmail).subscribe({
+    this.reservationService.getByEvent(this.eventId, this.searchByEmail.trim()).subscribe({
       next: (data) => { this.reservations.set(data); this.loadingReservations.set(false); },
       error: () => this.loadingReservations.set(false)
     });
